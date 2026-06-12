@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+/* Tailwind v4 Configuration via CSS Variables */
+@theme {
+  --color-darkBg: #0b0f19;
+  --color-brand-blue: #3b82f6;
+  --color-neon-green: #00E676;
+  
+  --animate-gradient-shift: gradient-shift 3s ease infinite;
+  
+  @keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+}
+
+@layer base {
+  body {
+    background-color: var(--color-dark-bg);
+    color: white;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    background-image: radial-gradient(circle at 50% -20%, #112211 0%, #0A0A0B 70%);
+  }
+}
+
+/* Custom Translucent Glassmorphism Utilities */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-button-green {
+  background: rgba(0, 255, 0, 0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 255, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-button-green:hover {
+  background: rgba(0, 255, 0, 0.25);
+  box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+  border-color: rgba(0, 255, 0, 0.6);
+}
