@@ -1,4 +1,5 @@
 ﻿import React, { useState } from "react";
+import { API_BASE_URL } from '../api';
 
 export default function AuthPage({ onLogin, onBack }) {
   const [formData, setFormData] = useState({ username: '', email: '', password: '', otp: '' });
@@ -17,7 +18,7 @@ export default function AuthPage({ onLogin, onBack }) {
 
     setIsProcessing(true);
     try {
-      const response = await fetch('http://localhost:8080/api/users/login', {
+      const response = await fetch(`${API_BASE_URL}/api/users/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -50,7 +51,7 @@ export default function AuthPage({ onLogin, onBack }) {
 
     setIsProcessing(true);
     try {
-      const response = await fetch('http://localhost:8080/api/users/send-otp', {
+      const response = await fetch(`${API_BASE_URL}/api/users/send-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -85,7 +86,7 @@ export default function AuthPage({ onLogin, onBack }) {
 
     setIsProcessing(true);
     try {
-      const response = await fetch('http://localhost:8080/api/users/verify-otp', {
+      const response = await fetch(`${API_BASE_URL}/api/users/verify-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: formData.username, code: formData.otp }),

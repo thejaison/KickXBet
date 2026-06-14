@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import LandingPage from './components/LandingPage';
 import AuthPage from './components/AuthPage';
 import Dashboard from './components/Dashboard';
+import { API_BASE_URL } from './api';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -10,7 +11,7 @@ function App() {
 
   const handleLogin = async (userData) => {
     try {
-      const res = await fetch('http://localhost:8080/api/users/login', {
+      const res = await fetch(`${API_BASE_URL}/api/users/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userData)

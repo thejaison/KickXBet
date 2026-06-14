@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../api';
 
 const LEAGUES = [
   { id: 'ALL', name: 'All', icon: '/images/all.png' },
@@ -36,7 +37,7 @@ export default function Dashboard({ user, setUser }) {
   const [matches, setMatches] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:8080/api/matches')
+    fetch(`${API_BASE_URL}/api/matches`)
       .then(res => res.json())
       .then(data => {
         const sorted = data.sort((a, b) => (a.status === 'LIVE' ? -1 : 1));
@@ -45,7 +46,7 @@ export default function Dashboard({ user, setUser }) {
       .catch(err => console.error("API Fetch Error:", err));
 
     if (user?.username && !user.isAdmin) {
-      fetch(`http://localhost:8080/api/users/${user.username}`)
+      fetch(`${API_BASE_URL}/api/users/${user.username}`)
         .then(res => {
           if (!res.ok) throw new Error('Unable to load user data.');
           return res.json();
@@ -56,7 +57,7 @@ export default function Dashboard({ user, setUser }) {
         })
         .catch(err => console.error('User Data Fetch Error:', err));
 
-      fetch(`http://localhost:8080/api/wagers/user/${user.username}`)
+      fetch(`${API_BASE_URL}/api/wagers/user/${user.username}`)
         .then(res => res.json())
         .then(wagerHistory => setMyBets(wagerHistory))
         .catch(err => console.error('Wager History Fetch Error:', err));
@@ -143,7 +144,7 @@ export default function Dashboard({ user, setUser }) {
       votes: 1
     };
 
-    fetch(`http://localhost:8080/api/matches?username=${encodeURIComponent(user.username)}`, {
+    fetch(`${API_BASE_URL}/api/matches?username=${encodeURIComponent(user.username)}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newFixture)
@@ -158,7 +159,7 @@ export default function Dashboard({ user, setUser }) {
 
   // Super Admin: Delete Match Feature
   const handleDeleteMatch = (matchId) => {
-    fetch(`http://localhost:8080/api/matches/${matchId}?username=${encodeURIComponent(user.username)}`, {
+    fetch(`${API_BASE_URL}/api/matches/${matchId}?username=${encodeURIComponent(user.username)}`, {
       method: 'DELETE'
     })
       .then(() => {
@@ -171,7 +172,7 @@ export default function Dashboard({ user, setUser }) {
   };
 
   const handleSetMatchWinner = (match, winnerTeam) => {
-    fetch(`http://localhost:8080/api/matches/${match.id}/winner?username=${encodeURIComponent(user.username)}`, {
+    fetch(`${API_BASE_URL}/api/matches/${match.id}/winner?username=${encodeURIComponent(user.username)}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ winnerTeam })
@@ -214,7 +215,7 @@ const handlePlaceBet = (match, team) => {
         username: user?.username || "Player"
       };
 
-      fetch('http://localhost:8080/api/wagers', {
+      fetch(`${API_BASE_URL}/api/wagers`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newBetRecord)
@@ -226,7 +227,7 @@ const handlePlaceBet = (match, team) => {
         .then(savedWager => {
           setMyBets(prev => [...prev, savedWager]);
 
-          return fetch(`http://localhost:8080/api/users/${user.username}`);
+          return fetch(`${API_BASE_URL}/api/users/${user.username}`);
         })
         .then(res => {
           if (!res.ok) throw new Error('Unable to update user balance.');
@@ -235,7 +236,7 @@ const handlePlaceBet = (match, team) => {
         .then(updatedUser => {
           setBalance(updatedUser.balance);
           setUser(prev => ({ ...prev, balance: updatedUser.balance }));
-          return fetch(`http://localhost:8080/api/matches/${selectedMatch.id}/vote`, {
+          return fetch(`${API_BASE_URL}/api/matches/${selectedMatch.id}/vote`, {
             method: 'POST'
           });
         })
@@ -316,7 +317,7 @@ const handlePlaceBet = (match, team) => {
       description: "Wallet Refill Credit",
       handler: function (response) {
         alert("Payment Captured! ID: " + response.razorpay_payment_id);
-        fetch(`http://localhost:8080/api/users/${user.username}/deposit`, {
+        fetch(`${API_BASE_URL}/api/users/${user.username}/deposit`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ amount })
